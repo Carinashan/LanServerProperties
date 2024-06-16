@@ -98,7 +98,7 @@ public class OpenToLanScreenEx {
 
 		// Set the widget displays from the configContainer
 		@SuppressWarnings("unchecked")
-		CycleButton<Boolean> allowCommandsSelector = findWidget(list, CycleButton.class, "selectWorld.allowCommands");
+		CycleButton<Boolean> allowCommandsSelector = findWidget(list, CycleButton.class, "selectWorld.allowCommands.new");
 		@SuppressWarnings("unchecked")
 		CycleButton<GameType> gameModeSelector = findWidget(list, CycleButton.class, "selectWorld.gameMode");
 		EditBox portEdit = findWidget(list, EditBox.class, "lanServer.port");
@@ -144,7 +144,7 @@ public class OpenToLanScreenEx {
 				SpriteIconButton lanServerSettings = SpriteIconButton
 					.builder(lanServerOptionsLabel, (button) -> mc.setScreen(new ModifyLanScreen(gui)), true)
 					.width(20)
-					.sprite(new ResourceLocation("icon/language"), 15, 15)
+					.sprite(ResourceLocation.withDefaultNamespace("icon/language"), 15, 15)
 					.build();
 				lanServerSettings.setPosition(gui.width / 2 - 124, optionButton.getY());
 				lanServerSettings.setTooltip(Tooltip.create(lanServerOptionsLabel));

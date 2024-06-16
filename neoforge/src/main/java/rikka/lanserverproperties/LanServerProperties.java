@@ -1,15 +1,17 @@
 package rikka.lanserverproperties;
 
+import java.util.function.Supplier;
+
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.ShareToLanScreen;
 import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.server.players.PlayerList;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 import rikka.lanserverproperties.mixin.PlayerListAccessor;
 
@@ -27,13 +29,19 @@ public class LanServerProperties {
 
 		// Register the GuiOpenEvent handler on client side only
 		// If the mod is accidentally installed on a dedicated server then do nothing
-		DistExecutor.safeRunWhenOn(Dist.CLIENT, ()->ClientHandler::registerGuiEventHandler);
+		safeRunWhenOn(Dist.CLIENT, ()->ClientHandler::registerGuiEventHandler);
+	}
+
+	public static void safeRunWhenOn(Dist dist, Supplier<Runnable> toRun) {
+		if (FMLLoader.getDist() == Dist.CLIENT) {
+			toRun.get().run();
+		}
 	}
 
 	private static class ClientHandler {
 		public static void registerGuiEventHandler() {
-			MinecraftForge.EVENT_BUS.addListener(ClientHandler::onGuiPostInit);
-			MinecraftForge.EVENT_BUS.addListener(ClientHandler::onGuiDraw);
+			NeoForge.EVENT_BUS.addListener(ClientHandler::onGuiPostInit);
+			NeoForge.EVENT_BUS.addListener(ClientHandler::onGuiDraw);
 		}
 
 		public static void onGuiPostInit(ScreenEvent.Init.Post event) {

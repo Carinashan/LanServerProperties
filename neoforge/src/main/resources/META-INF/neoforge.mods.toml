@@ -4,6 +4,9 @@ issueTrackerURL="https://github.com/rikka0w0/LanServerProperties/issues" #option
 license="MIT License"
 clientSideOnly=true
 
+[[mixins]]
+config="lsp.mixins.json"
+
 [[mods]] #mandatory
 modId="${mod_id}"
 version="${mod_version}"
@@ -28,11 +31,13 @@ displayTest="IGNORE_ALL_VERSION"
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.${mod_id}]] #optional
     # the modid of the dependency
-    modId="forge" #mandatory
-    # Does this dependency have to exist - if not, ordering below must be specified
-    mandatory=true #mandatory
+    modId="neoforge" #mandatory
+    # The type of the dependency. Can be one of "required", "optional", "incompatible" or "discouraged" (case insensitive).
+    # 'required' requires the mod to exist, 'optional' does not
+    # 'incompatible' will prevent the game from loading when the mod exists, and 'discouraged' will show a warning
+    type="required" #mandatory
     # The version range of the dependency
-    versionRange="${forge_version_range}" #mandatory
+    versionRange="${neo_version_range}" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
@@ -41,7 +46,7 @@ displayTest="IGNORE_ALL_VERSION"
 # Here's another dependency
 [[dependencies.${mod_id}]]
     modId="minecraft"
-    mandatory=true
+    type="required"
     versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="CLIENT"

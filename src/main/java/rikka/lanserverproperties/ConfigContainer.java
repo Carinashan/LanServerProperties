@@ -21,7 +21,7 @@ public abstract class ConfigContainer {
 
 	public void loadFromCurrentServer(IntegratedServer server) {
 		this.setGameType(server.getForcedGameType());
-		this.setCommandEnabled(server.getPlayerList().isAllowCheatsForAllPlayers());
+		this.setCommandEnabled(server.getPlayerList().isAllowCommandsForAllPlayers());
 		this.setGuiPort(server.getPort());
 
 		this.onlineMode = OnlineMode.of(server.usesAuthentication(), UUIDFixer.tryOnlineFirst);
@@ -32,7 +32,7 @@ public abstract class ConfigContainer {
 
 	public void applyToCurrentServer(IntegratedServer server) {
 		server.setDefaultGameType(this.getGuiGameType());
-		server.getPlayerList().setAllowCheatsForAllPlayers(this.getGuiCommandEnabled());
+		server.getPlayerList().setAllowCommandsForAllPlayers(this.getGuiCommandEnabled());
 		// Cannot change port once the server is started
 
 		server.setUsesAuthentication(this.onlineMode.onlineModeEnabled);

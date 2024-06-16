@@ -1,7 +1,9 @@
 # LAN Server Properties
-For Minecraft 1.12.2–1.20.4, Forge and Fabric.
+For Minecraft 1.12.2–1.21, Forge and Fabric.
 
-This branch is for 1.20.2 to 1.20.4,
+Minecraft 1.20.5 and 1.20.6 will not be supported due to a lack of available time. However, PR is always welcomed.
+
+This branch is for 1.21,
 hopefully it will work in future versions (although very unlikely).
 
 When this mod is installed, it enhances the vanilla Minecraft "Open to LAN" screen, which now also:
@@ -19,18 +21,22 @@ When this mod is installed, it enhances the vanilla Minecraft "Open to LAN" scre
 * Installing this mod does not prevent you from joining other vanilla or mod servers.
 
 ## Dependencies
-### Forge Version
-You need to install Forge and then install this mod.
+### Forge and Neoforge Version
+You need to install Forge/Neoforge and then install this mod.
 
 ### Fabric Version
 You need to install Fabric Loader and then install this mod. Fabric API is optional but highly recommended.
 
 ## For developers
-To modify and debug the code, first import the "forge" or "fabric" folder as a Gradle project in Eclipse IDE, and then run the gradle task `genEclipseRuns`.
+To modify and debug the code, first import the 
+"neoforge", "forge", or "fabric"
+folder as a Gradle project in Eclipse IDE, and then run the gradle task `genEclipseRuns`.
 
 Windows users need to replace `./` and `../` with `.\` and `..\`, respectively.
 
 Since 1.17.1, LSP for Fabric and Forge share common code as much as possible. The shared code base uses Minecraft official mapping.
+
+Since 1.21, LSP has added support for Neoforge while keeping the support for the Lex-Forge. In addition, coremods and access transformers are dropped completely and replaced by Mixin.
 
 ### Compile Fabric artifact
 ```
@@ -61,8 +67,19 @@ cd LanServerProperties/forge
 ./gradlew build
 ```
 
-### To specify JRE path (Since 1.18.1, Minecraft requires Java 17):
+### To specify JRE path:
+* Since 1.20.5, Minecraft requires Java 21.
+* Since 1.18, Minecraft requires Java 17.
+* Since 1.17, Minecraft requires Java 16.
+* Older version requires Java 8.
+
+
+Linux:
 ```
 ./gradlew -Dorg.gradle.java.home=/path_to_jdk_directory <commands>
 ```
 
+Windows:
+```
+.\gradlew.bat -D org.gradle.java.home="C:/Program Files/Java/jdk-21" runClient
+```

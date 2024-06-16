@@ -2,30 +2,50 @@ plugins {
 	id 'eclipse'
 	id 'idea'
 	id 'maven-publish'
-	id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+	id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
+	id 'org.spongepowered.mixin' version '0.7.+'
 }
 
 // Load the common property
-Properties props = new Properties();
-props.load(new FileInputStream("$project.rootDir/../fabric/gradle.properties"));
-props.each {prop -> project.ext.set(prop.key, prop.value)};
+Properties commonProps = new Properties();
+commonProps.load(new FileInputStream("$project.rootDir/../common.properties"));
+commonProps.each {prop -> project.ext.set(prop.key, prop.value)};
 
 project.ext.mod_id = project.archives_base_name;
 project.ext.minecraft_version_range = '[' + project.minecraft_version_min + ', ' + project.minecraft_version_max + ')';
 
-// Mojang ships Java 17 to end users in 1.18+
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+// Mojang ships Java 21 to end users in 1.20.5+, so your mod should target Java 21.
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 // These are defined in ../fabric/gradle.properties
 version = project.mod_version
 group = project.dev_group // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = project.archives_base_name
+
+base {
+	archivesName = mod_id
+}
 
 dependencies {
 	// Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
 	// that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
 	// The userdev artifact is a special name and will get all sorts of transformations applied to it.
 	minecraft 'net.minecraftforge:forge:'+ project.minecraft_version + '-' + project.forge_version
+
+	// Apply Mixin AP
+	annotationProcessor "org.spongepowered:mixin:${project.mixin_version}:processor"
+
+	// Added according to https://forums.minecraftforge.net/topic/149009-error-on-launch/
+	// Hack fix for now, force jopt-simple to be exactly 5.0.4 because Mojang ships that version, but some transitive dependencies request 6.0+ 
+	implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
+}
+
+mixin {
+	// MixinGradle Settings
+	add sourceSets.main, 'lsp.refmap.json'
+	config 'lsp.mixins.json'
+
+	debug.verbose = true
+	debug.export = true
 }
 
 minecraft {
@@ -37,12 +57,13 @@ minecraft {
 	mappings channel: 'official', version: project.minecraft_version // defined in ../fabric/gradle.properties
 	// makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
+	// Tell FG to not automtically create the reobf tasks, as we now use Official mappings at runtime, If you don't use them at dev time then you'll have to fix your reobf yourself.
+	reobf = false
+
 	// This property allows configuring Gradle's ProcessResources task(s) to run on IDE output locations before launching the game.
 	// It is REQUIRED to be set to true for this template to function.
 	// See https://docs.gradle.org/current/dsl/org.gradle.language.jvm.tasks.ProcessResources.html
 	copyIdeResources = true
-
-	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
 	// Default run configurations.
 	// These can be tweaked, removed, or duplicated as needed.
@@ -94,11 +115,9 @@ tasks.named('jar', Jar).configure {
 				"Implementation-Version": project.jar.archiveVersion,
 				"Implementation-Vendor" :"CISM",
 				"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+				'MixinConfigs': 'lsp.mixins.json'
 		])
 	}
-
-	// This is the preferred method to reobfuscate your jar file
-	finalizedBy 'reobfJar'
 }
 jar.archiveClassifier = 'forge';
 

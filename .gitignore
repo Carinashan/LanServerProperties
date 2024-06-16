@@ -22,4 +22,6 @@ out/
 # Eclipse Run Configs
 *.launch
 
+# Neoforge
+runs/
 
