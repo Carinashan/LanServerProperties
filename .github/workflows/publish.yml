@@ -62,7 +62,10 @@ jobs:
 
     - name: Make Gradle Wrapper Executable
       if: ${{ runner.os != 'Windows' }}
-      run: chmod +x ./forge/gradlew && chmod +x ./fabric/gradlew
+      run: |
+        chmod +x ./forge/gradlew
+        chmod +x ./neoforge/gradlew
+        chmod +x ./fabric/gradlew
 
     - name: Build Forge
       run: cd forge && ./gradlew clean build && cd ..
