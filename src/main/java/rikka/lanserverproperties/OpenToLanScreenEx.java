@@ -144,7 +144,7 @@ public class OpenToLanScreenEx {
 				SpriteIconButton lanServerSettings = SpriteIconButton
 					.builder(lanServerOptionsLabel, (button) -> mc.setScreen(new ModifyLanScreen(gui)), true)
 					.width(20)
-					.sprite(ResourceLocation.withDefaultNamespace("icon/language"), 15, 15)
+					.sprite(ResourceLocation.tryParse("icon/language"), 15, 15)
 					.build();
 				lanServerSettings.setPosition(gui.width / 2 - 124, optionButton.getY());
 				lanServerSettings.setTooltip(Tooltip.create(lanServerOptionsLabel));

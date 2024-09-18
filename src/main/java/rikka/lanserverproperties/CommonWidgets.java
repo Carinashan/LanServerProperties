@@ -29,8 +29,8 @@ public abstract class CommonWidgets {
 
 	private final static Function<String, Boolean> maxPlayerValidator = IntegerEditBox.makeValidator(0, 16);
 	private static final WidgetSprites PAGE_FORWARD_SPRITES = new WidgetSprites(
-			ResourceLocation.withDefaultNamespace("recipe_book/page_forward"),
-			ResourceLocation.withDefaultNamespace("recipe_book/page_forward_highlighted"));
+			ResourceLocation.tryParse("recipe_book/page_forward"),
+			ResourceLocation.tryParse("recipe_book/page_forward_highlighted"));
 
 	private final Button savePreferenceButton;
 	private final CycleButton<Boolean> enablePreferenceOption;
@@ -104,7 +104,7 @@ public abstract class CommonWidgets {
 		final SpriteIconButton showAOEButton = SpriteIconButton
 				.builder(alwaysOfflineLabel, (button) -> alwaysOfflinesEditBox.visible ^= true, true)
 				.width(20)
-				.sprite(ResourceLocation.withDefaultNamespace("icon/accessibility"), 15, 15)
+				.sprite(ResourceLocation.tryParse("icon/accessibility"), 15, 15)
 				.build();
 		showAOEButton.setPosition(screen.width / 2 - 180, 124);
 		showAOEButton.setTooltip(Tooltip.create(alwaysOfflineLabel));
