@@ -4,6 +4,7 @@ plugins {
 	id 'maven-publish'
 	id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
 	id 'org.spongepowered.mixin' version '0.7.+'
+	id 'me.shedaniel.unified-publishing' version '0.1.+'
 }
 
 apply from: '../common.gradle'
@@ -134,4 +135,35 @@ tasks.named('processResources', ProcessResources).configure {
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}
+
+publishUnified.dependsOn mergeChangelog
+publishUnified.inputs.files(mergeChangelog.outputs)
+publishUnified.mustRunAfter(mergeChangelog)
+
+unifiedPublishing {
+	project {
+		displayName = "${project.archives_base_name}-${project.mod_version}-forge"
+		version = "${project.mod_version}"
+		changelog.set(project.changelogProvider)
+		releaseType = "beta" // Use "release", "beta" or "alpha"
+		gameVersions = project.enumeratedMcVersions
+		gameLoaders = ["forge"]
+
+		mainPublication tasks.jar // Declares the publicated jar
+
+		if (project.curseforgeApiToken != null) {
+			curseforge {
+				token = project.curseforgeApiToken
+				id = "387365"
+			}
+		}
+
+		if (project.modrinthApiToken != null) {
+			modrinth {
+				token = project.modrinthApiToken
+				id = "P7dR8mSH" // Required, must be a string, ID of Modrinth project
+			}
+		}
+	}
 }
