@@ -3,10 +3,7 @@ plugins {
 	id 'maven-publish'
 }
 
-// Load the common property
-Properties commonProps = new Properties();
-commonProps.load(new FileInputStream("$project.rootDir/../common.properties"));
-commonProps.each {prop -> project.ext.set(prop.key, prop.value)};
+apply from: '../common.gradle'
 
 dependencies {
 	//to change the versions see the gradle.properties file
@@ -30,14 +27,9 @@ group = project.dev_group
 
 processResources {
 	inputs.property "version", project.version
-	def props = [
-		"version": project.version,
-		"minecraft_version_min": project.minecraft_version_min,
-		"loader_version": project.loader_version
-	]
 
 	filesMatching("fabric.mod.json") {
-		expand props
+		expand project.mergedProperties
 	}
 }
 
