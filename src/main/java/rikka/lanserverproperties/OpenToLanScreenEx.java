@@ -83,6 +83,17 @@ public class OpenToLanScreenEx {
 	}
 
 	/**
+	 * Starting from 1.21.2, the "Allow Commands" button was renamed to "selectWorld.allowCommands".
+	 * The ".new" suffix has been removed.
+	 * This function attempts to find the instance of the "Allow Commands" button using both names.
+	 */
+	@SuppressWarnings("unchecked")
+	private static CycleButton<Boolean> findAllowCommandToggleButton(List<? extends GuiEventListener> list) {
+		CycleButton<Boolean> allowCommandsSelector = findWidget(list, CycleButton.class, "selectWorld.allowCommands.new");
+		return allowCommandsSelector == null ? findWidget(list, CycleButton.class, "selectWorld.allowCommands") : allowCommandsSelector;
+	}
+
+	/**
 	 * Forge: GuiScreenEvent.InitGuiEvent.Post
 	 */
 	public void postInitShareToLanScreen(Font textRenderer, List<? extends GuiEventListener> list,
@@ -97,8 +108,7 @@ public class OpenToLanScreenEx {
 		this.startButton = findWidget(list, Button.class, "lanServer.start");
 
 		// Set the widget displays from the configContainer
-		@SuppressWarnings("unchecked")
-		CycleButton<Boolean> allowCommandsSelector = findWidget(list, CycleButton.class, "selectWorld.allowCommands.new");
+		CycleButton<Boolean> allowCommandsSelector = findAllowCommandToggleButton(list);
 		@SuppressWarnings("unchecked")
 		CycleButton<GameType> gameModeSelector = findWidget(list, CycleButton.class, "selectWorld.gameMode");
 		EditBox portEdit = findWidget(list, EditBox.class, "lanServer.port");
